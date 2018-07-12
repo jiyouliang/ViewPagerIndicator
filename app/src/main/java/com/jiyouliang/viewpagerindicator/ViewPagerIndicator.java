@@ -42,18 +42,10 @@ public class ViewPagerIndicator extends LinearLayout {
         mPaint.setPathEffect(new CornerPathEffect(3)); //避免三角形角度过于尖锐
     }
 
-    private int getScreenWidth() {
-        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        Point point = new Point();
-        wm.getDefaultDisplay().getSize(point);
-        return point.x;
-    }
-
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        int width = getScreenWidth();
         mTriangleWidth = 50;
         mTriangleHeight = (int) (mTriangleWidth / 1.75);
 
@@ -64,7 +56,7 @@ public class ViewPagerIndicator extends LinearLayout {
     protected void dispatchDraw(Canvas canvas) {
         //绘制三角形
         canvas.save();//保存状态
-        mTranslationX = getScreenWidth()/3/2 - mTriangleWidth/2;
+        mTranslationX = getWidth()/3/2 - mTriangleWidth/2;
         canvas.translate(mTranslationX, getHeight());//平移
         canvas.drawPath(mPath, mPaint);//绘制
         canvas.restore();//还原
