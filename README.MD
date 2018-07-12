@@ -2,4 +2,4 @@
 
 ### 截图
 
-![](screenshot.png)
+![](screenshot.gif)
