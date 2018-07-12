@@ -6,10 +6,8 @@ import android.graphics.Color;
 import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 /**
@@ -22,7 +20,8 @@ public class ViewPagerIndicator extends LinearLayout {
     private int mTriangleHeight;
     private Paint mPaint;//画笔
     private Path mPath;//路径
-    private float mTranslationX;//x轴偏移
+    private float mTranslationX = 0;//
+    private float mInitTranslationX;//x轴偏移
 
     public ViewPagerIndicator(Context context) {
         this(context, null);
@@ -48,6 +47,7 @@ public class ViewPagerIndicator extends LinearLayout {
 
         mTriangleWidth = 50;
         mTriangleHeight = (int) (mTriangleWidth / 1.75);
+        mInitTranslationX = getWidth()/3/2 - mTriangleWidth/2;
 
         initTriangle();
     }
@@ -56,8 +56,7 @@ public class ViewPagerIndicator extends LinearLayout {
     protected void dispatchDraw(Canvas canvas) {
         //绘制三角形
         canvas.save();//保存状态
-        mTranslationX = getWidth()/3/2 - mTriangleWidth/2;
-        canvas.translate(mTranslationX, getHeight());//平移
+        canvas.translate(mInitTranslationX + mTranslationX, getHeight());//平移
         canvas.drawPath(mPath, mPaint);//绘制
         canvas.restore();//还原
         super.dispatchDraw(canvas);
@@ -73,5 +72,11 @@ public class ViewPagerIndicator extends LinearLayout {
         mPath.lineTo(mTriangleWidth / 2, -mTriangleHeight / 2);
         mPath.close();//闭合路径
 
+    }
+
+    public void scroll(int position, float offset) {
+        int tabWidth = getWidth()/3;
+        mTranslationX = tabWidth * (position + offset);
+        invalidate();
     }
 }

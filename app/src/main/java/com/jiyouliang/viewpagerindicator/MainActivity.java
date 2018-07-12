@@ -5,9 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +15,7 @@ public class MainActivity extends FragmentActivity {
     private ViewPager mViewpager;
     private final List<String> TITLES = Arrays.asList("通讯录", "发现", "我的");
     private List<Fragment> list_fragment = new ArrayList<Fragment>();
+    private ViewPagerIndicator mViewPagerIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +28,23 @@ public class MainActivity extends FragmentActivity {
 
     private void initView() {
         mViewpager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPagerIndicator = (ViewPagerIndicator) findViewById(R.id.vp_indicator);
+        mViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                mViewPagerIndicator.scroll(position, positionOffset);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void initDatas() {
