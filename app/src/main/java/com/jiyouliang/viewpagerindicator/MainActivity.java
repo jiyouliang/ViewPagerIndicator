@@ -32,6 +32,7 @@ public class MainActivity extends FragmentActivity {
         mViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                System.out.println("position="+position+",positionOffset="+positionOffset);
                 mViewPagerIndicator.scroll(position, positionOffset);
             }
 

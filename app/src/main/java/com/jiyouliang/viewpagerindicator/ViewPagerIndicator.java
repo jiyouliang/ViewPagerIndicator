@@ -10,6 +10,7 @@ import android.graphics.Point;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
@@ -26,7 +27,7 @@ public class ViewPagerIndicator extends LinearLayout {
     private float mTranslationX = 0;//
     private float mInitTranslationX;//x轴偏移
     private final int DEFAULT_CONTENT_COUNT = 4;//默认容纳的tab个数
-    private int TAP_COUNT = 4;
+    private int VISIABLE_TAB_COUNT = 4;//当前可见tab个数
 
     public ViewPagerIndicator(Context context) {
         this(context, null);
@@ -52,7 +53,7 @@ public class ViewPagerIndicator extends LinearLayout {
 
         mTriangleWidth = 50;
         mTriangleHeight = (int) (mTriangleWidth / 1.75);
-        mInitTranslationX = getWidth() / TAP_COUNT / 2 - mTriangleWidth / 2;
+        mInitTranslationX = getWidth() / VISIABLE_TAB_COUNT / 2 - mTriangleWidth / 2;
 
         initTriangle();
     }
@@ -80,8 +81,17 @@ public class ViewPagerIndicator extends LinearLayout {
     }
 
     public void scroll(int position, float offset) {
-        int tabWidth = getWidth() / TAP_COUNT;
+        int tabWidth = getWidth() / VISIABLE_TAB_COUNT;
         mTranslationX = tabWidth * (position + offset);
+
+        if(position < getChildCount() - 1){//最后一个tab不移动Indicator
+            //当tab超过第3条时，移动tab
+            if (position >= (VISIABLE_TAB_COUNT - 1) && offset > 0 && getChildCount() > VISIABLE_TAB_COUNT) {
+
+                this.scrollTo((position - (VISIABLE_TAB_COUNT - 1)) * tabWidth + (int) (tabWidth * offset), 0);
+            }
+        }
+
         invalidate();
     }
 
@@ -97,7 +107,7 @@ public class ViewPagerIndicator extends LinearLayout {
             View childView = getChildAt(i);
             LinearLayout.LayoutParams lp = (LayoutParams) childView.getLayoutParams();
             lp.weight = 0;
-            lp.width = getScreenWidth()/TAP_COUNT;
+            lp.width = getScreenWidth()/ VISIABLE_TAB_COUNT;
             childView.setLayoutParams(lp);
         }
     }
