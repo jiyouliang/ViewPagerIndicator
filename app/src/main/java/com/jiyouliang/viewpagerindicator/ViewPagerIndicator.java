@@ -9,10 +9,14 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.List;
 
 /**
  * Created by JiYouLiang on 2018/07/12.
@@ -85,13 +89,11 @@ public class ViewPagerIndicator extends LinearLayout {
         mTranslationX = tabWidth * (position + offset);
 
         if(position < getChildCount() - 1){//最后一个tab不移动Indicator
-            //当tab超过第3条时，移动tab
+            //大于当前屏幕可见tab，移动出来显示
             if (position >= (VISIABLE_TAB_COUNT - 1) && offset > 0 && getChildCount() > VISIABLE_TAB_COUNT) {
-
                 this.scrollTo((position - (VISIABLE_TAB_COUNT - 1)) * tabWidth + (int) (tabWidth * offset), 0);
             }
         }
-
         invalidate();
     }
 
@@ -122,5 +124,30 @@ public class ViewPagerIndicator extends LinearLayout {
         Point point = new Point();
         wm.getDefaultDisplay().getSize(point);
         return point.x;
+    }
+
+    /**
+     * 动态添加tab view，根据传入的标题生成
+     * @param titles
+     */
+    public void setTabViews(List<String> titles){
+        if(titles != null && titles.size() > 0){
+            for(String title:titles){
+                View tabView = getTabView(title);
+                addView(tabView);
+            }
+        }
+    }
+
+    private View getTabView(String title){
+        TextView tv = new TextView(getContext());
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        tv.setTextColor(Color.WHITE);
+        LinearLayout.LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        lp.width = getScreenWidth()/VISIABLE_TAB_COUNT;
+        tv.setText(title);
+        tv.setGravity(Gravity.CENTER);
+        tv.setLayoutParams(lp);
+        return tv;
     }
 }

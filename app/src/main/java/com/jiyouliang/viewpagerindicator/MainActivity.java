@@ -49,6 +49,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void initDatas() {
+        mViewPagerIndicator.setTabViews(TITLES);
         for (String title : TITLES) {
             Fragment fragment = FragmentCommon.getInstance(title);
             list_fragment.add(fragment);
