@@ -6,8 +6,11 @@ import android.graphics.Color;
 import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 /**
@@ -22,6 +25,8 @@ public class ViewPagerIndicator extends LinearLayout {
     private Path mPath;//路径
     private float mTranslationX = 0;//
     private float mInitTranslationX;//x轴偏移
+    private final int DEFAULT_CONTENT_COUNT = 4;//默认容纳的tab个数
+    private int TAP_COUNT = 4;
 
     public ViewPagerIndicator(Context context) {
         this(context, null);
@@ -47,7 +52,7 @@ public class ViewPagerIndicator extends LinearLayout {
 
         mTriangleWidth = 50;
         mTriangleHeight = (int) (mTriangleWidth / 1.75);
-        mInitTranslationX = getWidth()/3/2 - mTriangleWidth/2;
+        mInitTranslationX = getWidth() / TAP_COUNT / 2 - mTriangleWidth / 2;
 
         initTriangle();
     }
@@ -75,8 +80,37 @@ public class ViewPagerIndicator extends LinearLayout {
     }
 
     public void scroll(int position, float offset) {
-        int tabWidth = getWidth()/3;
+        int tabWidth = getWidth() / TAP_COUNT;
         mTranslationX = tabWidth * (position + offset);
         invalidate();
+    }
+
+    /**
+     * xml解析完毕回调
+     */
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        //设置tab熟悉
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View childView = getChildAt(i);
+            LinearLayout.LayoutParams lp = (LayoutParams) childView.getLayoutParams();
+            lp.weight = 0;
+            lp.width = getScreenWidth()/TAP_COUNT;
+            childView.setLayoutParams(lp);
+        }
+    }
+
+    /**
+     * 获取屏幕宽度
+     *
+     * @return
+     */
+    private int getScreenWidth() {
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        Point point = new Point();
+        wm.getDefaultDisplay().getSize(point);
+        return point.x;
     }
 }

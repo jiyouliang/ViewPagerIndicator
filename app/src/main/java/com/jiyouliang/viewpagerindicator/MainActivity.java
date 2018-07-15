@@ -13,7 +13,7 @@ import java.util.List;
 public class MainActivity extends FragmentActivity {
 
     private ViewPager mViewpager;
-    private final List<String> TITLES = Arrays.asList("通讯录", "发现", "我的");
+    private final List<String> TITLES = Arrays.asList("关注", "推荐", "世界杯", "科技", "体育", "财经", "军事", "娱乐", "汽车");
     private List<Fragment> list_fragment = new ArrayList<Fragment>();
     private ViewPagerIndicator mViewPagerIndicator;
 
