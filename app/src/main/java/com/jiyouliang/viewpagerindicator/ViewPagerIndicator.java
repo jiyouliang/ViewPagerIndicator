@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -30,8 +31,10 @@ public class ViewPagerIndicator extends LinearLayout {
     private Path mPath;//路径
     private float mTranslationX = 0;//
     private float mInitTranslationX;//x轴偏移
-    private final int DEFAULT_CONTENT_COUNT = 4;//默认容纳的tab个数
+    private int DEFAULT_CONTENT_COUNT = 4;//默认容纳的tab个数
     private int VISIABLE_TAB_COUNT = 4;//当前可见tab个数
+    private ViewPager mViewPager;
+    private OnPageChangeListener mListener;
 
     public ViewPagerIndicator(Context context) {
         this(context, null);
@@ -40,7 +43,6 @@ public class ViewPagerIndicator extends LinearLayout {
     public ViewPagerIndicator(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initPaint();
-
     }
 
     private void initPaint() {
@@ -88,7 +90,7 @@ public class ViewPagerIndicator extends LinearLayout {
         int tabWidth = getWidth() / VISIABLE_TAB_COUNT;
         mTranslationX = tabWidth * (position + offset);
 
-        if(position < getChildCount() - 1){//最后一个tab不移动Indicator
+        if (position < getChildCount() - 1) {//最后一个tab不移动Indicator
             //大于当前屏幕可见tab，移动出来显示
             if (position >= (VISIABLE_TAB_COUNT - 1) && offset > 0 && getChildCount() > VISIABLE_TAB_COUNT) {
                 this.scrollTo((position - (VISIABLE_TAB_COUNT - 1)) * tabWidth + (int) (tabWidth * offset), 0);
@@ -109,7 +111,7 @@ public class ViewPagerIndicator extends LinearLayout {
             View childView = getChildAt(i);
             LinearLayout.LayoutParams lp = (LayoutParams) childView.getLayoutParams();
             lp.weight = 0;
-            lp.width = getScreenWidth()/ VISIABLE_TAB_COUNT;
+            lp.width = getScreenWidth() / VISIABLE_TAB_COUNT;
             childView.setLayoutParams(lp);
         }
     }
@@ -128,26 +130,72 @@ public class ViewPagerIndicator extends LinearLayout {
 
     /**
      * 动态添加tab view，根据传入的标题生成
+     *
      * @param titles
      */
-    public void setTabViews(List<String> titles){
-        if(titles != null && titles.size() > 0){
-            for(String title:titles){
+    public void setTabViews(List<String> titles) {
+        if (titles != null && titles.size() > 0) {
+            for (String title : titles) {
                 View tabView = getTabView(title);
                 addView(tabView);
             }
         }
     }
 
-    private View getTabView(String title){
+    private View getTabView(String title) {
         TextView tv = new TextView(getContext());
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         tv.setTextColor(Color.WHITE);
         LinearLayout.LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        lp.width = getScreenWidth()/VISIABLE_TAB_COUNT;
+        lp.width = getScreenWidth() / VISIABLE_TAB_COUNT;
         tv.setText(title);
         tv.setGravity(Gravity.CENTER);
         tv.setLayoutParams(lp);
         return tv;
+    }
+
+    public void setViewPager(ViewPager viewPager, int position) {
+        this.mViewPager = viewPager;
+        this.mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                System.out.println("position=" + position + ",positionOffset=" + positionOffset);
+                scroll(position, positionOffset);
+                if (mListener != null) {
+                    mListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (mListener != null) {
+                    mListener.onPageSelected(position);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                if (mListener != null) {
+                    mListener.onPageScrollStateChanged(state);
+                }
+            }
+        });
+        this.mViewPager.setCurrentItem(position);
+
+    }
+
+    public void setOnPageChangeListener(OnPageChangeListener listener) {
+        this.mListener = listener;
+    }
+
+    /**
+     * 自定义回调监听
+     */
+    public interface OnPageChangeListener {
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
+
+        public void onPageSelected(int position);
+
+        public void onPageScrollStateChanged(int state);
     }
 }

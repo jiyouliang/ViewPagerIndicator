@@ -12,8 +12,8 @@ import java.util.List;
 
 public class MainActivity extends FragmentActivity {
 
-    private ViewPager mViewpager;
-    private final List<String> TITLES = Arrays.asList("关注", "推荐", "世界杯", "科技", "体育", "财经", "军事", "娱乐", "汽车");
+    private MyViewPager mViewpager;
+    private final List<String> TITLES = Arrays.asList("热点","关注", "推荐", "世界杯", "科技", "体育", "财经", "军事", "娱乐", "汽车");
     private List<Fragment> list_fragment = new ArrayList<Fragment>();
     private ViewPagerIndicator mViewPagerIndicator;
 
@@ -27,25 +27,9 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void initView() {
-        mViewpager = (ViewPager) findViewById(R.id.viewpager);
+        mViewpager = (MyViewPager) findViewById(R.id.viewpager);
         mViewPagerIndicator = (ViewPagerIndicator) findViewById(R.id.vp_indicator);
-        mViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                System.out.println("position="+position+",positionOffset="+positionOffset);
-                mViewPagerIndicator.scroll(position, positionOffset);
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        mViewPagerIndicator.setViewPager(mViewpager, 0);
     }
 
     private void initDatas() {
