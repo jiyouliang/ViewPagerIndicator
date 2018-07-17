@@ -35,6 +35,8 @@ public class ViewPagerIndicator extends LinearLayout {
     private int VISIABLE_TAB_COUNT = 4;//当前可见tab个数
     private ViewPager mViewPager;
     private OnPageChangeListener mListener;
+    private int WHITE_NORMAL = 0x77FFFFFF;
+    private int WHITE_HIGH_LIGHT = 0xFFFFFFFF;//高亮色
 
     public ViewPagerIndicator(Context context) {
         this(context, null);
@@ -90,10 +92,10 @@ public class ViewPagerIndicator extends LinearLayout {
         int tabWidth = getWidth() / VISIABLE_TAB_COUNT;
         mTranslationX = tabWidth * (position + offset);
 
-        if (position < getChildCount() - 1) {//最后一个tab不移动Indicator
+        if (position < getChildCount() - 2) {//最后一个tab不移动Indicator
             //大于当前屏幕可见tab，移动出来显示
-            if (position >= (VISIABLE_TAB_COUNT - 1) && offset > 0 && getChildCount() > VISIABLE_TAB_COUNT) {
-                this.scrollTo((position - (VISIABLE_TAB_COUNT - 1)) * tabWidth + (int) (tabWidth * offset), 0);
+            if (position >= (VISIABLE_TAB_COUNT - 2) && offset > 0 && getChildCount() > VISIABLE_TAB_COUNT) {
+                this.scrollTo((position - (VISIABLE_TAB_COUNT - 2)) * tabWidth + (int) (tabWidth * offset), 0);
             }
         }
         invalidate();
@@ -140,12 +142,13 @@ public class ViewPagerIndicator extends LinearLayout {
                 addView(tabView);
             }
         }
+        setOnItemClick();
     }
 
     private View getTabView(String title) {
         TextView tv = new TextView(getContext());
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        tv.setTextColor(Color.WHITE);
+        tv.setTextColor(WHITE_NORMAL);
         LinearLayout.LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         lp.width = getScreenWidth() / VISIABLE_TAB_COUNT;
         tv.setText(title);
@@ -154,7 +157,8 @@ public class ViewPagerIndicator extends LinearLayout {
         return tv;
     }
 
-    public void setViewPager(ViewPager viewPager, int position) {
+
+    public void setViewPager(ViewPager viewPager, int pos) {
         this.mViewPager = viewPager;
         this.mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -171,6 +175,7 @@ public class ViewPagerIndicator extends LinearLayout {
                 if (mListener != null) {
                     mListener.onPageSelected(position);
                 }
+                setTabHighLight(position);
             }
 
             @Override
@@ -180,12 +185,56 @@ public class ViewPagerIndicator extends LinearLayout {
                 }
             }
         });
-        this.mViewPager.setCurrentItem(position);
-
+        mViewPager.setCurrentItem(pos);
+        setTabHighLight(pos);
     }
+
+    /**
+     * 重置tab颜色
+     */
+    public void resetHightLight() {
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View view = getChildAt(i);
+            if (view instanceof TextView) {
+                ((TextView) view).setTextColor(WHITE_NORMAL);
+            }
+        }
+    }
+
+    /**
+     * 设置tag高亮
+     *
+     * @param position
+     */
+    public void setTabHighLight(int position) {
+        resetHightLight();
+        View view = getChildAt(position);
+        if (view instanceof TextView) {
+            ((TextView) view).setTextColor(WHITE_HIGH_LIGHT);
+        }
+    }
+
 
     public void setOnPageChangeListener(OnPageChangeListener listener) {
         this.mListener = listener;
+    }
+
+    /**
+     * 设置tab条目点击
+     */
+    private void setOnItemClick() {
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            final int index = i;
+            View view = getChildAt(i);
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mViewPager.setCurrentItem(index);
+                }
+            });
+        }
     }
 
     /**

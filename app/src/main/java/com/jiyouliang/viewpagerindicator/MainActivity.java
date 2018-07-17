@@ -27,8 +27,8 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void initView() {
-        mViewpager = (MyViewPager) findViewById(R.id.viewpager);
         mViewPagerIndicator = (ViewPagerIndicator) findViewById(R.id.vp_indicator);
+        mViewpager = (MyViewPager) findViewById(R.id.viewpager);
         mViewPagerIndicator.setViewPager(mViewpager, 0);
     }
 

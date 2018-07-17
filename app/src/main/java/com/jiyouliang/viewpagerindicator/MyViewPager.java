@@ -20,6 +20,6 @@ public class MyViewPager extends ViewPager {
     @Override
     public void setCurrentItem(int item) {
         //切换不经过中间页
-        super.setCurrentItem(item, false);
+        super.setCurrentItem(item, true);
     }
 }
