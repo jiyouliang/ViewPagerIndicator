@@ -18,7 +18,7 @@ public class MainActivity extends FragmentActivity {
 
     private ViewPagerIndicator mIndicator;
     private ViewPager mViewPager;
-    private List<String> TITLES = Arrays.asList("关注", "热点", "体育", "军事");
+    private List<String> TITLES = Arrays.asList("关注", "热点", "体育");
     private List<Fragment> mFragmentList;
 
     @Override
