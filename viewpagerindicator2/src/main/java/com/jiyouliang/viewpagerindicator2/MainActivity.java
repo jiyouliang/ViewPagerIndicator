@@ -32,7 +32,7 @@ public class MainActivity extends FragmentActivity {
     private void initView() {
         mIndicator = (ViewPagerIndicator) findViewById(R.id.vp_indicator);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-
+        mIndicator.setTabItemTitles(TITLES);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             //页面滚动回调
             @Override

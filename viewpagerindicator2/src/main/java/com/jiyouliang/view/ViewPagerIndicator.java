@@ -11,11 +11,16 @@ import android.graphics.Point;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.jiyouliang.viewpagerindicator2.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by JiYouLiang on 2018/07/19.
@@ -31,6 +36,11 @@ public class ViewPagerIndicator extends LinearLayout {
     private int mTranslationX;//移动时的偏移
     private int mVisiableTabCount;//可见tab个数
     private final static int DEFAULT_VISIABLE_TAB_COUNT = 4;//默认可见tab个数
+    private List<String> mTitles;
+    private int COLOR_NORMAL = 0x77FFFFFF;
+    ;
+    private int COLOR_HIGHT_LIGHT = 0x77FFFFFF;
+    ;
 
     public ViewPagerIndicator(Context context) {
         this(context, null);
@@ -53,6 +63,8 @@ public class ViewPagerIndicator extends LinearLayout {
         mPaint.setColor(Color.WHITE);//画笔颜色
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setPathEffect(new CornerPathEffect(3));//避免过于尖锐
+
+        mTitles = new ArrayList<String>();
     }
 
     /**
@@ -106,12 +118,12 @@ public class ViewPagerIndicator extends LinearLayout {
         int tabWidth = getWidth() / mVisiableTabCount;
         mTranslationX = (int) (tabWidth * (offset + position));//x轴移动距离
         //移动右侧隐藏tab的条件
-        if(mVisiableTabCount != 1){
+        if (mVisiableTabCount != 1) {
             if (position >= (mVisiableTabCount - 2) && offset > 0 && getChildCount() > mVisiableTabCount) {
                 this.scrollTo((position - (mVisiableTabCount - 2)) * tabWidth + (int) (tabWidth * offset), 0);
             }
-        }else{
-            this.scrollTo(position * tabWidth + (int)(tabWidth * offset), 0);
+        } else {
+            this.scrollTo(position * tabWidth + (int) (tabWidth * offset), 0);
         }
         invalidate();//刷新view，当修改某个view时需要调用该方法才能看到刷新后的view
     }
@@ -134,6 +146,7 @@ public class ViewPagerIndicator extends LinearLayout {
 
     /**
      * 屏幕宽度
+     *
      * @return
      */
     private int getScreenWidth() {
@@ -141,5 +154,30 @@ public class ViewPagerIndicator extends LinearLayout {
         Point point = new Point();
         wm.getDefaultDisplay().getSize(point);
         return point.x;
+    }
+
+    public void setTabItemTitles(List<String> titles) {
+        if (titles != null && titles.size() > 0) {
+            this.removeAllViews();
+            for (String title : titles) {
+                View view = getTextView(title);
+                addView(view);
+            }
+
+        }
+    }
+
+    private View getTextView(String title) {
+        TextView tv = new TextView(getContext());
+        LinearLayout.LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        lp.width = getScreenWidth()/mVisiableTabCount;
+        tv.setLayoutParams(lp);
+        tv.setTextSize(16);
+        tv.setText(title);
+        tv.setGravity(Gravity.CENTER);
+        tv.setTextColor(COLOR_NORMAL);
+
+
+        return tv;
     }
 }
