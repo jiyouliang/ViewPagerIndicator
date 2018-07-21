@@ -63,7 +63,7 @@ public class ViewPagerIndicator extends LinearLayout {
         super.onSizeChanged(w, h, oldw, oldh);
         System.out.println("onSizeChanged");
         mTriangleWidth = (int) (w / mVisiableTabCount * RADIUS_TRIANGLE_WIDTH);//三角形宽度
-        mInitTranslationX = w / 3 / 2 - mTriangleWidth / 2;//初始化三角形指示器位置
+        mInitTranslationX = w / mVisiableTabCount / 2 - mTriangleWidth / 2;//初始化三角形指示器位置
         initTriangle();
     }
 
@@ -105,6 +105,14 @@ public class ViewPagerIndicator extends LinearLayout {
     public void scroll(int position, float offset) {
         int tabWidth = getWidth() / mVisiableTabCount;
         mTranslationX = (int) (tabWidth * (offset + position));//x轴移动距离
+        //移动右侧隐藏tab的条件
+        if(mVisiableTabCount != 1){
+            if (position >= (mVisiableTabCount - 2) && offset > 0 && getChildCount() > mVisiableTabCount) {
+                this.scrollTo((position - (mVisiableTabCount - 2)) * tabWidth + (int) (tabWidth * offset), 0);
+            }
+        }else{
+            this.scrollTo(position * tabWidth + (int)(tabWidth * offset), 0);
+        }
         invalidate();//刷新view，当修改某个view时需要调用该方法才能看到刷新后的view
     }
 
