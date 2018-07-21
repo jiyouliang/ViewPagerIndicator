@@ -18,7 +18,7 @@ public class MainActivity extends FragmentActivity {
 
     private ViewPagerIndicator mIndicator;
     private ViewPager mViewPager;
-    private List<String> TITLES = Arrays.asList("关注", "热点", "体育");
+    private List<String> TITLES = Arrays.asList("关注", "热点", "体育", "军事", "国际", "房产", "电影", "世界");
     private List<Fragment> mFragmentList;
 
     @Override
@@ -52,9 +52,9 @@ public class MainActivity extends FragmentActivity {
         });
     }
 
-    private void initData(){
+    private void initData() {
         mFragmentList = new ArrayList<Fragment>();
-        for(String title : TITLES){
+        for (String title : TITLES) {
             VpSimpleFragment fragment = VpSimpleFragment.newInstance(title);
             mFragmentList.add(fragment);
         }
@@ -62,7 +62,7 @@ public class MainActivity extends FragmentActivity {
         mViewPager.setAdapter(adapter);
     }
 
-    private static class MyAdapter extends FragmentPagerAdapter{
+    private static class MyAdapter extends FragmentPagerAdapter {
 
         private final List<Fragment> fragmentList;
 
