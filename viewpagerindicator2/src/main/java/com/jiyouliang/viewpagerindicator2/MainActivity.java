@@ -32,6 +32,24 @@ public class MainActivity extends FragmentActivity {
     private void initView() {
         mIndicator = (ViewPagerIndicator) findViewById(R.id.vp_indicator);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
+
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            //页面滚动回调
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                mIndicator.scroll(position, positionOffset);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void initData(){

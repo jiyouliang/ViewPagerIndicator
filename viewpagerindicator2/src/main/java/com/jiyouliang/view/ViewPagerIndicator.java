@@ -43,6 +43,7 @@ public class ViewPagerIndicator extends LinearLayout {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        System.out.println("onSizeChanged");
         mTriangleWidth = (int) (w / 3 * RADIUS_TRIANGLE_WIDTH);//三角形宽度
         mInitTranslationX = w / 3 / 2 - mTriangleWidth / 2;//初始化三角形指示器位置
         initTriangle();
@@ -60,14 +61,31 @@ public class ViewPagerIndicator extends LinearLayout {
         mPath.close();//闭合路径
     }
 
+    /**
+     * 绘制子view
+     * @param canvas
+     */
     @Override
     protected void dispatchDraw(Canvas canvas) {
+        System.out.println("dispatchDraw");
         //绘制三角形
         canvas.save();//保存之前状态
         //平移画布
-        canvas.translate(mInitTranslationX+ mTranslationX, getHeight());
+        canvas.translate(mInitTranslationX + mTranslationX, getHeight());
         canvas.drawPath(mPath, mPaint);//绘制路径
         canvas.restore();//还原状态，避免覆盖之前状态
         super.dispatchDraw(canvas);
+    }
+
+    /**
+     * 跟随手指滑动
+     *
+     * @param position
+     * @param offset   移动偏移量
+     */
+    public void scroll(int position, float offset) {
+        int tabWidth = getWidth() / 3;
+        mTranslationX = (int) (tabWidth * (offset + position));//x轴移动距离
+        invalidate();//刷新view，当修改某个view时需要调用该方法才能看到刷新后的view
     }
 }
