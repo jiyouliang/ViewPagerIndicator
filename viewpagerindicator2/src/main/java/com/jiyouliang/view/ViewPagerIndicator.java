@@ -143,6 +143,7 @@ public class ViewPagerIndicator extends LinearLayout {
             lp.weight = 0;
             lp.width = getScreenWidth() / mVisiableTabCount;//计算每个tab宽度
         }
+        setOnItemClick();
     }
 
     /**
@@ -164,8 +165,8 @@ public class ViewPagerIndicator extends LinearLayout {
                 View view = getTextView(title);
                 addView(view);
             }
-
         }
+        setOnItemClick();
     }
 
     private View getTextView(String title) {
@@ -236,23 +237,41 @@ public class ViewPagerIndicator extends LinearLayout {
 
     /**
      * 设置tab选中高亮颜色
+     *
      * @param position
      */
-    private void setTabHightLight(int position){
+    private void setTabHightLight(int position) {
         resetTagHightLight();
         View childView = getChildAt(position);
-        ((TextView)childView).setTextColor(COLOR_HIGHT_LIGHT);
+        ((TextView) childView).setTextColor(COLOR_HIGHT_LIGHT);
     }
 
+    /**
+     * item点击高亮
+     */
+    private void setOnItemClick() {
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            final int index = i;
+            View view = getChildAt(i);
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mViewPager.setCurrentItem(index);
+//                    setTabHightLight(index);
+                }
+            });
+        }
+    }
 
     /**
      * tab改变回调
      */
     public interface OnPageChangeListener {
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
+        void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
 
-        public void onPageSelected(int position);
+        void onPageSelected(int position);
 
-        public void onPageScrollStateChanged(int state);
+        void onPageScrollStateChanged(int state);
     }
 }
