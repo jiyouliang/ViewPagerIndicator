@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.jiyouliang.view.MyViewPager;
 import com.jiyouliang.view.ViewPagerIndicator;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.List;
 public class MainActivity extends FragmentActivity {
 
     private ViewPagerIndicator mIndicator;
-    private ViewPager mViewPager;
+    private MyViewPager mViewPager;
     private List<String> TITLES = Arrays.asList("关注", "热点", "体育", "军事", "国际", "房产", "电影", "世界");
     private List<Fragment> mFragmentList;
 
@@ -31,7 +32,7 @@ public class MainActivity extends FragmentActivity {
 
     private void initView() {
         mIndicator = (ViewPagerIndicator) findViewById(R.id.vp_indicator);
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager = (MyViewPager) findViewById(R.id.viewpager);
         mIndicator.setTabItemTitles(TITLES);
         mIndicator.setViewPager(mViewPager, 0);
     }
