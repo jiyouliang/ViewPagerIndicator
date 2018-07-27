@@ -194,7 +194,7 @@ public class ViewPagerIndicator extends LinearLayout {
     /**
      * 设置关联ViewPager
      */
-    public void setViewPager(ViewPager viewPager, int pos) {
+    public void setViewPager(ViewPager viewPager, final int pos) {
         this.mViewPager = viewPager;
         this.mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -210,6 +210,7 @@ public class ViewPagerIndicator extends LinearLayout {
                 if (mListener != null) {
                     mListener.onPageSelected(position);
                 }
+                System.out.println("onPageSelected=" + position);
                 setTabHightLight(position);
             }
 
@@ -258,6 +259,7 @@ public class ViewPagerIndicator extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     mViewPager.setCurrentItem(index);
+                    int currentItem = mViewPager.getCurrentItem();
 //                    setTabHightLight(index);
                 }
             });

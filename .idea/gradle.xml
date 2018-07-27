@@ -9,7 +9,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/demo2" />
             <option value="$PROJECT_DIR$/viewpagerindicator2" />
+            <option value="$PROJECT_DIR$/viewpagerslidingtab" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

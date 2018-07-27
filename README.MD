@@ -9,7 +9,7 @@
 
 ### 2、页面切换不经过中间页面
 
-自定义ViewPager重写setCurrentItem方法
+页面切换不经过中间页面，和今日头条效果一样，自定义ViewPager重写setCurrentItem方法，如果需要显示经过中间页面，改为true即可：
 
  	@Override
     public void setCurrentItem(int item) {
