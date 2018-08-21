@@ -31,6 +31,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void initData() {
+        mIndicator.setTabTitles(TITLES);
         for (String title : TITLES) {
             Fragment fragment = TabFragment.getInstance(title);
             mFragmentList.add(fragment);
@@ -47,5 +48,7 @@ public class MainActivity extends FragmentActivity {
                 return mFragmentList.size();
             }
         });
+
+        mIndicator.setViewPager(mViewPager);
     }
 }
