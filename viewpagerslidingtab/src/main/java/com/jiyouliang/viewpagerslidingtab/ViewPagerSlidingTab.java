@@ -3,11 +3,9 @@ package com.jiyouliang.viewpagerslidingtab;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -24,11 +22,8 @@ public class ViewPagerSlidingTab extends HorizontalScrollView {
     private LinearLayout mLayoutContainer;
     private ViewPager mViewPager;
     private ViewPager.OnPageChangeListener mListener = new PageChangeListener();
-    private int currentPosition = 0;
-    private float currentPositionOffset = 0f;
-    private int tabCount;
-    private int scrollOffset = 0;
-    private int lastScrollX = 0;
+    private static final int COLOR_WHITE = 0xFFFFFFFF;
+    private static final int COLOR_NORMAL = 0x77FFFFFF;
 
     public ViewPagerSlidingTab(Context context) {
         this(context, null);
@@ -51,10 +46,11 @@ public class ViewPagerSlidingTab extends HorizontalScrollView {
 
     public void setTabTitles(List<String> titles) {
         mLayoutContainer.removeAllViews();
-        for (String title : titles) {
-            mLayoutContainer.addView(getTabView(title));
+        for (int i = 0; i < titles.size(); i++) {
+            addTab(titles, i);
         }
     }
+
 
     private View getTabView(String title) {
         TextView tv = new TextView(getContext());
@@ -63,24 +59,48 @@ public class ViewPagerSlidingTab extends HorizontalScrollView {
         tv.setLayoutParams(lp);
         tv.setTextSize(16);
 
-        tv.setTextColor(Color.WHITE);
+        tv.setTextColor(COLOR_NORMAL);
         tv.setGravity(Gravity.CENTER);
         tv.setText(title);
         return tv;
     }
 
+    private void addTab(List<String> titles, final int position) {
+        View tabView = getTabView(titles.get(position));
+        //点击切换tab
+        tabView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewPager.setCurrentItem(position);
+            }
+        });
+        mLayoutContainer.addView(tabView);
+    }
+
+    private void setTabColor(int position){
+        resetTabsColor();
+        ((TextView)mLayoutContainer.getChildAt(position)).setTextColor(COLOR_WHITE);
+    }
+
+    private void resetTabsColor() {
+        for (int i = 0; i < mLayoutContainer.getChildCount(); i++) {
+            View childView = mLayoutContainer.getChildAt(i);
+            if(childView instanceof TextView){
+                ((TextView) childView).setTextColor(COLOR_NORMAL);
+            }
+        }
+    }
+
     public void setViewPager(ViewPager viewPager) {
         this.mViewPager = viewPager;
         mViewPager.setOnPageChangeListener(mListener);
-        tabCount = mViewPager.getAdapter().getCount();
+        setTabColor(0);
     }
 
     private class PageChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            currentPosition = position;
-            currentPositionOffset = positionOffset;
 
             scrollToChild(position, positionOffset);
 //            invalidate();
@@ -88,7 +108,7 @@ public class ViewPagerSlidingTab extends HorizontalScrollView {
 
         @Override
         public void onPageSelected(int position) {
-
+            setTabColor(position);
         }
 
         @Override
